@@ -1,0 +1,30 @@
+name: Cache Demo CI
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  cache-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Create a dummy dependency directory to cache
+      - name: Prepare dependencies
+        run: |
+          mkdir -p deps
+          echo "static-dependency" > deps/example.txt
+
+      - name: Cache dependencies
+        id: cache
+        uses: actions/cache@v4
+        with:
+          path: deps
+          key: cache-6cf2dba
+
+      - name: prime-cache-6cf2dba
+        run: |
+          echo "Cache hit? -> ${{ steps.cache.outputs.cache-hit }}"
